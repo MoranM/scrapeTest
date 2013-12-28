@@ -11,7 +11,9 @@ var passport = require('passport');
 var configDB = require('./config/database');
 var app = express();
 
-mongoose.connect(configDB.url);
+mongoose.connect(configDB.url,function(err){
+
+});
 
 require('./config/passport')(passport);
 
@@ -24,9 +26,7 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.basicAuth(function(_user,_pass){
-	return user.authenticate(_user,_pass);
-}));
+app.use(passport.initialize());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
