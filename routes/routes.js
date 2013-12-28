@@ -1,7 +1,5 @@
 module.exports = function (app, passport) {
 	
-	var routes = require('../routes');
-	var user = require('../routes/user');
 	var scraper = require('../lib/scraper');
 
 
@@ -10,21 +8,21 @@ module.exports = function (app, passport) {
 	});
 	
 	app.post('/login', passport.authenticate('local-login',{ session: false }), function(req, res){
-		res.send('ok');
+		res.json({
+			success :req.isAuthenticate,
+			token : req.apiKey
+		});
 	});
 
 	app.post('/signup', passport.authenticate('local-signup',{ session: false }), function(req, res){
-		res.send('ok');
+		res.json({
+			success :req.isAuthenticate,
+			token : req.apiKey
+		});
 	});
 	
-	app.get('/scrape',isLoggedIn, scraper.scrape);
+	app.get('/scrape',passport.authenticate('local-auth',{ session: false }), function(req, res){
+		//scraper.scrapes
+	});
 
-
-	function isLoggedIn(req, res, next){
-		if (req.isAuthenticate) {
-			return next();
-		};
-
-		res.redirect(401,'/');
-	}
 }

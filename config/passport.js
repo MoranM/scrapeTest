@@ -64,19 +64,44 @@ module.exports = function(passport) {
     }));
 
     passport.use('local-login', new LocalStrategy({
-        usernameField : 'userId',
-        passwordField : 'token',
+        usernameField : 'email',
+        passwordField : 'password',
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },
-     function(req, userId, token, done){
-        User.findeOne({'local.apiKey':token}, function(err, user){
+     function(req, email, password, done){
+        User.findOne({'local.email':email}, function(err, user){
             if(err) return done(err);
 
             if (!user) {
                 done(null,false);
             };
+
+            if (user.validatepassword(password)) {
+                req.isAuthenticate = true;
+                req.apiKey = user.local.apiKey;
+                return done(null, user);    
+            };
+
+            return done(null, false);
+        });
+    }));
+
+    passport.use('local-auth', new LocalStrategy({
+        usernameField : 'email',
+        passwordField : 'password',
+        passReqToCallback : true // allows us to pass back the entire request to the callback
+    },
+     function(req, email, password, done){
+        User.findOne({'local.apiKey':req.query.token}, function(err, user){
+            if(err) return done(err);
+
+            if (!user) {
+                done(null,false);
+            };
+
             req.isAuthenticate = true;
-            return done(null, user);
+            req.user = user;
+            return done(null, user);        
         });
     }));
 

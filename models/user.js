@@ -12,8 +12,8 @@ var userSchema = mongoose.Schema({
 
 // methods ======================
 // checking if password is valid using bcrypt
-userSchema.methods.validateApiKey = function(key) {
-    return bcrypt.compareSync(key, this.local.apiKey);
+userSchema.methods.validatepassword = function(password) {
+    return bcrypt.compareSync(password, this.local.password);
 };
 
 // this method hashes the password and sets the users password
@@ -23,6 +23,7 @@ userSchema.methods.generateKey = function(password, done) {
 
     bcrypt.hash(apiKey, null, null, function(errKey, hashKey) {
         if (errKey) return next(errKey);
+
         bcrypt.hash(password, null, null, function(errPassword, hashPassword){
     		if(errPassword)return next(errPassword);
 
