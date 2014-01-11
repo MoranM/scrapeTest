@@ -24,7 +24,8 @@ userSchema.methods.generateKey = function(password, done) {
     bcrypt.hash(apiKey, null, null, function(errKey, hashKey) {
         if (errKey) return next(errKey);
 
-        bcrypt.hash(password, null, null, function(errPassword, hashPassword){
+        bcrypt.hash(password, bcrypt.genSaltSync(8), null, function(errPassword, hashPassword){
+
     		if(errPassword)return next(errPassword);
 
         	user.local.password = hashPassword;

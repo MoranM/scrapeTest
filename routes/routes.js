@@ -1,6 +1,9 @@
+
+var User = require('../models/user')();
+var scraper = require('../lib/scraper');
+
 module.exports = function (app, passport) {
 	
-	var scraper = require('../lib/scraper');
 
 
 	app.get('/', function(req,res){
@@ -21,8 +24,20 @@ module.exports = function (app, passport) {
 		});
 	});
 	
-	app.get('/scrape',passport.authenticate('local-auth',{ session: false }), function(req, res){
-		//scraper.scrapes
+	app.get('/scrape',isLoggedIn, function(req, res){
+		scraper.scrape(req,res);
 	});
 
+}
+
+function isLoggedIn(req, res, next) {
+    User.findOne({'local.apiKey':req.query.token}, function(err, user){
+        if(err) return done(err);
+
+        if (!user) {
+            res.status(401).end();
+        };
+
+        return next();
+    });
 }

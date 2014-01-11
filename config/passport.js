@@ -87,11 +87,12 @@ module.exports = function(passport) {
     }));
 
     passport.use('local-auth', new LocalStrategy({
-        usernameField : 'email',
-        passwordField : 'password',
+        usernameField : '',
+        passwordField : '',
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },
      function(req, email, password, done){
+         console.log("searching for user");
         User.findOne({'local.apiKey':req.query.token}, function(err, user){
             if(err) return done(err);
 
@@ -104,5 +105,4 @@ module.exports = function(passport) {
             return done(null, user);        
         });
     }));
-
 };
