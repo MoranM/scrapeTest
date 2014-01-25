@@ -32,12 +32,17 @@ module.exports = function (app, passport) {
 
 function isLoggedIn(req, res, next) {
     User.findOne({'local.apiKey':req.query.token}, function(err, user){
-        if(err) return done(err);
+        if(err) {
+            res.status(500);
+            res.end();
+        }
 
-        if (!user) {
-            res.status(401).end();
-        };
+        if (user){
+            req.user = user;
+            return next();
+        }
 
-        return next();
+        res.status(401);
+        res.end();
     });
 }

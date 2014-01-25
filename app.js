@@ -12,7 +12,7 @@ var configDB = require('./config/database');
 var app = express();
 
 mongoose.connect(configDB.url,function(err){
-
+    console.log(err)
 });
 
 require('./config/passport')(passport);

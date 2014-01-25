@@ -6,7 +6,8 @@ var userSchema = mongoose.Schema({
 	local:{
 		email:String,
 		password:String,
-		apiKey:String
+		apiKey:String,
+        recipes:[String]
 	}
 });
 
