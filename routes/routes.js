@@ -28,6 +28,10 @@ module.exports = function (app, passport) {
 		scraper.scrape(req,res);
 	});
 
+    app.get('/user/recipes', isLoggedIn, function(req, res){
+        //fetchUserRecipeFlow.fetchAll()
+    })
+
 }
 
 function isLoggedIn(req, res, next) {
